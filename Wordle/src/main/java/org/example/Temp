@@ -1,0 +1,109 @@
+package org.example;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+public class WordleFrame extends JFrame implements KeyListener {
+    private static final int ROW = 5;
+    private static final int COL = 6;
+    WordleBlock[][] blocks = new WordleBlock[ROW][COL];
+    JPanel mainPnl;
+    JPanel headerPnl;
+    JPanel blockPnl;
+    JPanel controlPnl;
+
+    JLabel headerLbl;
+
+    JButton enterBtn;
+
+    String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+    String[] upperLetters = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+
+    int rowsFilled = 0;
+    int colsFilled = 0;
+
+    public WordleFrame(){
+        setSize(500,600);
+
+        mainPnl = new JPanel();
+        mainPnl.setLayout(new BorderLayout());
+
+        createHeaderPanel();
+        mainPnl.add(headerPnl, BorderLayout.NORTH);
+
+        createBlockPanel();
+        mainPnl.add(blockPnl, BorderLayout.CENTER);
+
+        createControlPanel();
+        mainPnl.add(controlPnl, BorderLayout.SOUTH);
+
+        this.addKeyListener(this);
+
+        add(mainPnl);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    private void createHeaderPanel() {
+        headerPnl = new JPanel();
+        headerPnl.setLayout(new FlowLayout());
+
+        headerLbl = new JLabel("WORDLE");
+
+        headerPnl.add(headerLbl);
+    }
+
+    private void createBlockPanel() {
+        blockPnl = new JPanel();
+        blockPnl.setLayout(new GridLayout(ROW, COL));
+        for(int row = 0; row < ROW; row++){
+            for(int col = 0; col < COL; col++){
+                blocks[row][col] = new WordleBlock(row, col);
+                blockPnl.add(blocks[row][col]);
+            }
+        }
+    }
+
+    private void createControlPanel() {
+        controlPnl = new JPanel();
+
+        enterBtn = new JButton("Enter");
+
+        controlPnl.add(enterBtn);
+    }
+
+    public void addLetter(String keyChar){
+        blocks[rowsFilled][colsFilled].setText(keyChar);
+        rowsFilled++;
+        colsFilled++;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.println("You pressed: " + e.getKeyChar());
+        String keyChar = String.valueOf(e.getKeyChar());
+        for(int i = 0; i < letters.length; i++){
+            if(keyChar.equals(letters[i])){
+                System.out.println("You pressed: " + keyChar);
+                System.out.println(e.getKeyChar());
+                addLetter(keyChar);
+            } else if (keyChar.equals(upperLetters[i])){
+                System.out.println(keyChar);
+                System.out.println(e.getKeyChar());
+                addLetter(keyChar);
+            }
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+}
